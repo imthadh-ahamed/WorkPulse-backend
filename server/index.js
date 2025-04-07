@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import connectDB from "./config/db.js";
 // import authRoutes from "./routes/auth.js";
-import tenantRoutes from "./routes/tenant.js";
+import tenantRoutes from "./routes/Tenant/tenant.js";
 // import employeeRoutes from "./routes/employee.js";
 // import errorHandler from "./middleware/errorHandler.js";
 
