@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
-import Employee from "../models/Employee";
+import Employee from "../models/Employee.js";
 
-exports.authenticate = async (req, res, next) => {
+export const authenticate = async (req, res, next) => {
   try {
     const token = req.header("Authorization").replace("Bearer ", "");
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -20,7 +20,7 @@ exports.authenticate = async (req, res, next) => {
   }
 };
 
-exports.authorizeAdmin = (req, res, next) => {
+export const authorizeAdmin = (req, res, next) => {
   if (!req.user.isAdmin) {
     return res.status(403).json({ error: "Admin access required" });
   }

@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import connectDB from "./config/db.js";
 // import authRoutes from "./routes/auth.js";
-// import adminRoutes from "./routes/admin.js";
+import tenantRoutes from "./routes/tenant.js";
 // import employeeRoutes from "./routes/employee.js";
 // import errorHandler from "./middleware/errorHandler.js";
 
@@ -18,7 +18,7 @@ app.use(express.json());
 
 // // Routes
 // app.use("/api/auth", authRoutes);
-// app.use("/api/admin", adminRoutes);
+app.use("/api/tenant", tenantRoutes);
 // app.use("/api/employees", employeeRoutes);
 
 // // Error handling
