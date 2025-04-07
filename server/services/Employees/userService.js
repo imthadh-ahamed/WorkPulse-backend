@@ -1,9 +1,9 @@
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
-import Employee from "../models/Employee.js";
-import TempEmployee from "../models/TempEmployee.js";
-import InitialEmployee from "../models/InitialEmployee.js";
+import Employee from "../../models/Employees/Employee.js";
+import TempEmployee from "../../models/Employees/TempEmployee.js";
+import InitialEmployee from "../../models/Employees/InitialEmployee.js";
 
 export const createInitialEmployee = async (data) => {
   return await InitialEmployee.create(data);

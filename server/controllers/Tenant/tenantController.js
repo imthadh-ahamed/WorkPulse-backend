@@ -1,6 +1,6 @@
-import * as tenantService from "../services/tenantService.js";
-import * as userService from "../services/userService.js";
-import * as emailService from "../services/emailService.js";
+import * as tenantService from "../../services/Tenant/tenantService.js";
+import * as userService from "../../services/Employees/userService.js";
+import * as emailService from "../../services/Employees/emailService.js";
 import mongoose from "mongoose";
 
 export const createOrganization = async (req, res) => {
