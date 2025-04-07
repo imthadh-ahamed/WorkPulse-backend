@@ -1,11 +1,6 @@
 import mongoose from "mongoose";
 
 const tenantSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "TempEmployee",
-    required: true,
-  },
   companyName: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   phone: { type: String, default: null },
