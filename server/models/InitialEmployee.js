@@ -31,4 +31,9 @@ const InitialEmployeeSchema = new mongoose.Schema({
   isDeleted: { type: Boolean, default: false },
 });
 
-module.exports = mongoose.model("InitialEmployee", InitialEmployeeSchema);
+const InitialEmployee = mongoose.model(
+  "InitialEmployee",
+  InitialEmployeeSchema
+);
+
+export default InitialEmployee;

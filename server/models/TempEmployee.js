@@ -9,4 +9,6 @@ const tempEmployeeSchema = new mongoose.Schema({
   created: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model("TempEmployee", tempEmployeeSchema);
+const TempEmployee = mongoose.model("TempEmployee", tempEmployeeSchema);
+
+export default TempEmployee;

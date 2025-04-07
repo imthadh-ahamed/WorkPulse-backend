@@ -42,4 +42,6 @@ const tenantSchema = new mongoose.Schema({
   isDeleted: { type: Boolean, default: false },
 });
 
-module.exports = mongoose.model("Tenant", tenantSchema);
+const Tenant = mongoose.model("Tenant", tenantSchema);
+
+export default Tenant;
