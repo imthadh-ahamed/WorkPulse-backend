@@ -74,13 +74,18 @@ export const createOrganization = async (req, res) => {
 export const inviteEmployee = async (req, res) => {
   try {
     const { tenantId } = req.user;
-    const employeeData = req.body;
+    const { firstName, lastName, email, role } = req.body;
 
     const invitationToken = userService.generateInvitationToken();
     const tempEmployee = await userService.createTempEmployee({
-      ...employeeData,
       tenantId,
+      firstName,
+      lastName,
+      email,
+      role,
       invitationToken,
+      created: new Date(),
+      createdBy: req.user._id,
     });
 
     await emailService.sendInvitationEmail(tempEmployee.email, invitationToken);

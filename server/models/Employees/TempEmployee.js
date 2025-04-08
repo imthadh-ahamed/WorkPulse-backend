@@ -9,7 +9,7 @@ const tempEmployeeSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  companyName: { type: String, required: true, unique: true },
+  role: { type: String, required: true },
   invitationToken: { type: String, required: true },
   created: { type: Date, default: Date.now },
   createdBy: {
