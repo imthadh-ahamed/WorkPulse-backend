@@ -1,4 +1,6 @@
 import { body, validationResult } from "express-validator";
+import Tenant from "../../models/Tenant/Tenant.js";
+import Employee from "../../models/Employees/Employee.js";
 
 const validateCreateOrganization = [
   body("companyName")
@@ -16,6 +18,7 @@ const validateCreateOrganization = [
     }),
   body("email")
     .isEmail()
+    .isLength({ max: 250 })
     .withMessage("Invalid email format")
     .custom(async (value) => {
       const employeeExists = await Employee.findOne({
@@ -32,12 +35,50 @@ const validateCreateOrganization = [
     }
     next();
   },
+  body("address")
+    .optional()
+    .isLength({ max: 250 })
+    .withMessage("Address must not exceed 250 characters"),
+  body("city")
+    .optional()
+    .isLength({ max: 100 })
+    .withMessage("City must not exceed 100 characters"),
+  body("state")
+    .optional()
+    .isLength({ max: 100 })
+    .withMessage("State must not exceed 100 characters"),
+  body("country")
+    .optional()
+    .isLength({ max: 100 })
+    .withMessage("Country must not exceed 100 characters"),
+  body("postalCode")
+    .optional()
+    .isLength({ max: 20 })
+    .withMessage("Postal code must not exceed 20 characters"),
+  body("industry")
+    .optional()
+    .isLength({ max: 100 })
+    .withMessage("Industry must not exceed 100 characters"),
+  body("websiteUrl")
+    .optional()
+    .isLength({ max: 250 })
+    .withMessage("Website URL must not exceed 250 characters")
+    .isURL()
+    .withMessage("Invalid URL format"),
+  body("status")
+    .optional()
+    .isIn(["active", "inactive", "suspended"])
+    .withMessage(
+      "Status must be one of the following: active, inactive, suspended"
+    ),
 ];
 
 const validateInviteEmployee = [
   body("email")
     .isEmail()
     .withMessage("Invalid email format")
+    .isLength({ max: 250 })
+    .withMessage("Email must not exceed 250 characters")
     .custom(async (value) => {
       const employeeExists = await Employee.findOne({
         where: { email: value },
