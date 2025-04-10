@@ -9,7 +9,7 @@ import {
 const router = express.Router();
 
 router.post(
-  "/create",
+  "/",
   validateCreateOrganization,
   tenantController.createOrganization
 );
@@ -18,7 +18,7 @@ router.post(
   "/invite-employee",
   authenticate,
   authorizeAdmin,
-  // validateInviteEmployee,
+  validateInviteEmployee,
   tenantController.inviteEmployee
 );
 
