@@ -5,6 +5,7 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/auth.js";
 import tenantRoutes from "./routes/Tenant/tenant.js";
 import announcementRoutes from "./routes/Announcement/announcement.js";
+import calendarRoutes from "./routes/Calendar/calendar.js";
 // import employeeRoutes from "./routes/employee.js";
 // import errorHandler from "./middleware/errorHandler.js";
 
@@ -31,6 +32,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/tenant", tenantRoutes);
 app.use("/api/announcement", announcementRoutes);
+app.use("/api/calendar", calendarRoutes);
 // app.use("/api/employees", employeeRoutes);
 
 // Error handling
