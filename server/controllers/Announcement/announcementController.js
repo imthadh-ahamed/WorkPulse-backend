@@ -23,10 +23,31 @@ export const createAnnouncement = async (req, res) => {
 export const getAnnouncements = async (req, res) => {
   try {
     const { tenantId } = req.user;
+    const { title, page = 1, limit = 4 } = req.query;
 
-    const announcements = await Announcement.find({ tenantId });
+    const query = { tenantId };
 
-    res.status(200).json(announcements);
+    // Optional title search (case-insensitive)
+    if (title) {
+      query.title = { $regex: title, $options: "i" };
+    }
+
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    // Get total count for pagination metadata
+    const total = await Announcement.countDocuments(query);
+
+    const announcements = await Announcement.find(query)
+      .skip(skip)
+      .limit(parseInt(limit))
+      .sort({ createdAt: 1 });
+
+    res.status(200).json({
+      data: announcements,
+      currentPage: parseInt(page),
+      totalPages: Math.ceil(total / limit),
+      totalItems: total,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -87,29 +108,6 @@ export const getLatestAnnouncements = async (req, res) => {
       .limit(2); // Limit the results to 2
 
     res.status(200).json(latestAnnouncements);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-export const searchAnnouncementsByTitle = async (req, res) => {
-  try {
-    const { tenantId } = req.user;
-    const { title } = req.query; // Get the search query from the request query parameters
-
-    if (!title) {
-      return res
-        .status(400)
-        .json({ error: "Search query for title is required" });
-    }
-
-    // Search for announcements where the title contains the query string
-    const announcements = await Announcement.find({
-      tenantId,
-      title: { $regex: title, $options: "i" }, // Case-insensitive search in title
-    });
-
-    res.status(200).json(announcements);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -5,7 +5,6 @@ import {
   deleteAnnouncement,
   getAnnouncements,
   getLatestAnnouncements,
-  searchAnnouncementsByTitle,
   updateAnnouncement,
 } from "../../controllers/Announcement/announcementController.js";
 import { authenticate, authorizeAdmin } from "../../middleware/auth.js";
@@ -29,6 +28,5 @@ router.put(
 );
 router.delete("/:id", authenticate, authorizeAdmin, deleteAnnouncement);
 router.get("/latest", authenticate, getLatestAnnouncements);
-router.get("/search", authenticate, searchAnnouncementsByTitle);
 
 export default router;
