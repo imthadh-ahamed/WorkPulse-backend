@@ -3,16 +3,19 @@ import nodemailer from "nodemailer";
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
-  secure: true, // Use true for port 465
+  secure: true,
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: "imthadhahamed885@gmail.com",
+    // user: process.env.EMAIL_USER,
+    pass: "agyn dkwl stle jcom",
+    // pass: process.env.EMAIL_PASS,
   },
 });
 
 export const sendInvitationEmail = async (toEmail, token) => {
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: "imthadhahamed885@gmail.com",
+    // from: process.env.EMAIL_USER,
     to: toEmail,
     subject: "Invitation to Join Organization",
     html: `<p>Click <a href="${process.env.APP_URL}/signup?token=${token}">here</a> to complete your registration</p>`,
@@ -20,3 +23,5 @@ export const sendInvitationEmail = async (toEmail, token) => {
 
   await transporter.sendMail(mailOptions);
 };
+
+export default sendInvitationEmail;

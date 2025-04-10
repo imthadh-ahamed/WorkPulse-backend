@@ -1,6 +1,7 @@
 import * as tenantService from "../../services/Tenant/tenantService.js";
 import * as userService from "../../services/Employees/userService.js";
-import * as emailService from "../../services/Employees/emailService.js";
+// import * as emailService from "../../services/Employees/emailService.js";
+import sendInvitationEmail from "../../services/Employees/emailService.js";
 import mongoose from "mongoose";
 
 export const createOrganization = async (req, res) => {
@@ -88,7 +89,7 @@ export const inviteEmployee = async (req, res) => {
       createdBy: req.user._id,
     });
 
-    await emailService.sendInvitationEmail(tempEmployee.email, invitationToken);
+    await sendInvitationEmail(tempEmployee.email, invitationToken);
 
     res.status(201).json(tempEmployee);
   } catch (error) {

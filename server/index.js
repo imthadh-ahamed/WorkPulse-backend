@@ -4,6 +4,7 @@ import cors from "cors"; // Import CORS
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/auth.js";
 import tenantRoutes from "./routes/Tenant/tenant.js";
+import announcementRoutes from "./routes/Announcement/announcement.js";
 // import employeeRoutes from "./routes/employee.js";
 // import errorHandler from "./middleware/errorHandler.js";
 
@@ -29,6 +30,7 @@ app.use(express.json());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/tenant", tenantRoutes);
+app.use("/api/announcement", announcementRoutes);
 // app.use("/api/employees", employeeRoutes);
 
 // Error handling
