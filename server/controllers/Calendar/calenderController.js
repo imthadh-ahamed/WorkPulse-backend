@@ -1,4 +1,4 @@
-import Event from "../../models/Calendar/Event.js";
+import CalendarService from "../../services/Calendar/CalendarService.js";
 
 export const createEvent = async (req, res) => {
   try {
@@ -15,7 +15,7 @@ export const createEvent = async (req, res) => {
     const { tenantId } = req.user;
     const createdBy = req.user.id;
 
-    const newEvent = await Event.create({
+    const newEvent = await CalendarService.createEvent({
       title,
       description,
       start,
@@ -42,20 +42,15 @@ export const getEvents = async (req, res) => {
 
     const query = { tenantId };
 
-    // Optional title search (case-insensitive)
     if (title) {
       query.title = { $regex: title, $options: "i" };
     }
 
-    const skip = (parseInt(page) - 1) * parseInt(limit);
-
-    // Get total count for pagination metadata
-    const total = await Event.countDocuments(query);
-
-    const events = await Event.find(query)
-      .skip(skip)
-      .limit(parseInt(limit))
-      .sort({ start: 1 }); // Sort by start date in ascending order
+    const { events, total } = await CalendarService.getEvents(
+      query,
+      page,
+      limit
+    );
 
     res.status(200).json({
       data: events,
@@ -73,7 +68,7 @@ export const getEventById = async (req, res) => {
     const { id } = req.params;
     const { tenantId } = req.user;
 
-    const event = await Event.findOne({ _id: id, tenantId });
+    const event = await CalendarService.getEventById(id, tenantId);
 
     if (!event) {
       return res.status(404).json({ error: "Event not found" });
@@ -88,15 +83,12 @@ export const getEventById = async (req, res) => {
 export const getUpcomingEvents = async (req, res) => {
   try {
     const { tenantId } = req.user;
-
     const currentDate = new Date();
 
-    const upcomingEvents = await Event.find({
+    const upcomingEvents = await CalendarService.getUpcomingEvents(
       tenantId,
-      start: { $gte: currentDate },
-    })
-      .sort({ start: 1 }) // Sort by start date in ascending order
-      .limit(2); // Limit the results to 2
+      currentDate
+    );
 
     res.status(200).json(upcomingEvents);
   } catch (error) {
@@ -120,24 +112,24 @@ export const updateEvent = async (req, res) => {
     const { tenantId } = req.user;
     const modifiedBy = req.user.id;
 
-    const event = await Event.findOne({ _id: id, tenantId });
+    const updateData = {
+      title,
+      description,
+      start,
+      end,
+      location,
+      type,
+      repeat,
+      repeatEndDate,
+      modified: new Date(),
+      modifiedBy,
+    };
+
+    const event = await CalendarService.updateEvent(id, tenantId, updateData);
 
     if (!event) {
       return res.status(404).json({ error: "Event not found" });
     }
-
-    event.title = title;
-    event.description = description;
-    event.start = start;
-    event.end = end;
-    event.location = location;
-    event.type = type;
-    event.repeat = repeat;
-    event.repeatEndDate = repeatEndDate;
-    event.modified = new Date();
-    event.modifiedBy = modifiedBy;
-
-    await event.save();
 
     res.status(200).json(event);
   } catch (error) {
@@ -150,13 +142,11 @@ export const deleteEvent = async (req, res) => {
     const { id } = req.params;
     const { tenantId } = req.user;
 
-    const event = await Event.findOne({ _id: id, tenantId });
+    const event = await CalendarService.deleteEvent(id, tenantId);
 
     if (!event) {
       return res.status(404).json({ error: "Event not found" });
     }
-
-    await event.deleteOne({ _id: id, tenantId });
 
     res.status(200).json({ message: "Event deleted successfully" });
   } catch (error) {

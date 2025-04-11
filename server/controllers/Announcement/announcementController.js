@@ -1,4 +1,4 @@
-import Announcement from "../../models/Announcement/Announcement.js";
+import AnnouncementService from "../../services/Announcement/AnnouncementService.js";
 
 export const createAnnouncement = async (req, res) => {
   try {
@@ -6,7 +6,7 @@ export const createAnnouncement = async (req, res) => {
     const { tenantId } = req.user;
     const createdBy = req.user.id;
 
-    const newAnnouncement = await Announcement.create({
+    const newAnnouncement = await AnnouncementService.createAnnouncement({
       title,
       description,
       tenantId,
@@ -25,22 +25,10 @@ export const getAnnouncements = async (req, res) => {
     const { tenantId } = req.user;
     const { title, page = 1, limit = 4 } = req.query;
 
-    const query = { tenantId };
-
-    // Optional title search (case-insensitive)
-    if (title) {
-      query.title = { $regex: title, $options: "i" };
-    }
-
-    const skip = (parseInt(page) - 1) * parseInt(limit);
-
-    // Get total count for pagination metadata
-    const total = await Announcement.countDocuments(query);
-
-    const announcements = await Announcement.find(query)
-      .skip(skip)
-      .limit(parseInt(limit))
-      .sort({ createdAt: 1 });
+    const { announcements, total } = await AnnouncementService.getAnnouncements(
+      { tenantId, title },
+      { page: parseInt(page), limit: parseInt(limit) }
+    );
 
     res.status(200).json({
       data: announcements,
@@ -53,27 +41,32 @@ export const getAnnouncements = async (req, res) => {
   }
 };
 
+export const getLatestAnnouncements = async (req, res) => {
+  try {
+    const { tenantId } = req.user;
+
+    const latestAnnouncements =
+      await AnnouncementService.getLatestAnnouncements(tenantId);
+
+    res.status(200).json(latestAnnouncements);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 export const updateAnnouncement = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description } = req.body;
     const { tenantId } = req.user;
     const modifiedBy = req.user.id;
 
-    const announcement = await Announcement.findOne({ _id: id, tenantId });
+    const updatedAnnouncement = await AnnouncementService.updateAnnouncement(
+      id,
+      tenantId,
+      { ...req.body, modified: new Date(), modifiedBy }
+    );
 
-    if (!announcement) {
-      return res.status(404).json({ error: "Announcement not found" });
-    }
-
-    announcement.title = title;
-    announcement.description = description;
-    announcement.modified = new Date();
-    announcement.modifiedBy = modifiedBy;
-
-    await announcement.save();
-
-    res.status(200).json(announcement);
+    res.status(200).json(updatedAnnouncement);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -84,30 +77,9 @@ export const deleteAnnouncement = async (req, res) => {
     const { id } = req.params;
     const { tenantId } = req.user;
 
-    const announcement = await Announcement.findOne({ _id: id, tenantId });
-
-    if (!announcement) {
-      return res.status(404).json({ error: "Announcement not found" });
-    }
-
-    await announcement.deleteOne({ _id: id, tenantId });
+    await AnnouncementService.deleteAnnouncement(id, tenantId);
 
     res.status(200).json({ message: "Announcement deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-export const getLatestAnnouncements = async (req, res) => {
-  try {
-    const { tenantId } = req.user;
-
-    // Fetch the latest 2 announcements for the tenant, sorted by created date in descending order
-    const latestAnnouncements = await Announcement.find({ tenantId })
-      .sort({ created: -1 }) // Sort by created date in descending order
-      .limit(2); // Limit the results to 2
-
-    res.status(200).json(latestAnnouncements);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
