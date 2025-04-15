@@ -12,12 +12,22 @@ export const login = async (req, res) => {
     }
 
     const token = generateAuthToken(employee);
-    res.json({ employee, token });
+    res.json({ token });
   } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getCurrentUser = async (req, res) => {
+  try {
+    const user = req.user;
+    res.status(200).json(user);
+  } catch {
     res.status(500).json({ error: error.message });
   }
 };
 
 export default {
   login,
+  getCurrentUser,
 };

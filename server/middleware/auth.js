@@ -8,7 +8,7 @@ export const authenticate = async (req, res, next) => {
     const employee = await Employee.findOne({
       _id: decoded.userId,
       isDeleted: false,
-    });
+    }).select("-password");
 
     if (!employee) throw new Error();
 

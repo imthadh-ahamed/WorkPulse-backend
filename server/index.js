@@ -6,6 +6,7 @@ import authRoutes from "./routes/auth.js";
 import tenantRoutes from "./routes/Tenant/tenant.js";
 import announcementRoutes from "./routes/Announcement/announcement.js";
 import calendarRoutes from "./routes/Calendar/calendar.js";
+import projectRoutes from "./routes/Project/Project.js";
 // import employeeRoutes from "./routes/employee.js";
 // import errorHandler from "./middleware/errorHandler.js";
 
@@ -33,6 +34,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/tenant", tenantRoutes);
 app.use("/api/announcement", announcementRoutes);
 app.use("/api/calendar", calendarRoutes);
+app.use("/api/project", projectRoutes);
 // app.use("/api/employees", employeeRoutes);
 
 // Error handling
