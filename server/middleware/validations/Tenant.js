@@ -87,16 +87,13 @@ const validateInviteEmployee = [
         throw new Error("Email must be unique in the employee table");
       }
     }),
-  body("firstName")
-    .notEmpty()
-    .withMessage("First name is required")
-    .isLength({ max: 100 })
-    .withMessage("First name must not exceed 100 characters"),
-  body("lastName")
-    .notEmpty()
-    .withMessage("Last name is required")
-    .isLength({ max: 100 })
-    .withMessage("Last name must not exceed 100 characters"),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+  },
 ];
 
 export { validateCreateOrganization, validateInviteEmployee };
