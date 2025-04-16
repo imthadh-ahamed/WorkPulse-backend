@@ -6,8 +6,6 @@ const tempEmployeeSchema = new mongoose.Schema({
     ref: "Tenant",
     required: true,
   },
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   role: { type: String, required: true },
   invitationToken: { type: String, required: true },

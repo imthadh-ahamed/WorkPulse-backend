@@ -21,12 +21,12 @@ export const createTempEmployee = async (data) => {
   return await TempEmployee.create(data);
 };
 
-export const getTempEmployeeById = async (id) => {
-  return await TempEmployee.findById(id);
+export const getTempEmployeeById = async (data) => {
+  return await TempEmployee.findOne(data);
 };
 
-export const deleteTempEmployee = async (id) => {
-  return await TempEmployee.findByIdAndDelete(id);
+export const deleteTempEmployee = async (data) => {
+  return await TempEmployee.findOneAndDelete(data);
 };
 
 export const createEmployee = async (data, options = {}) => {
@@ -35,6 +35,10 @@ export const createEmployee = async (data, options = {}) => {
   }
   const employee = new Employee(data);
   return await employee.save(options);
+};
+
+export const getEmployeeByEmail = async (email) => {
+  return await Employee.findOne({ email });
 };
 
 export const generateAuthToken = (employee) => {

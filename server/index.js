@@ -7,8 +7,7 @@ import tenantRoutes from "./routes/Tenant/tenant.js";
 import announcementRoutes from "./routes/Announcement/announcement.js";
 import calendarRoutes from "./routes/Calendar/calendar.js";
 import projectRoutes from "./routes/Project/Project.js";
-// import employeeRoutes from "./routes/employee.js";
-// import errorHandler from "./middleware/errorHandler.js";
+import taskRoutes from "./routes/Task/Task.js";
 
 dotenv.config();
 
@@ -35,7 +34,7 @@ app.use("/api/tenant", tenantRoutes);
 app.use("/api/announcement", announcementRoutes);
 app.use("/api/calendar", calendarRoutes);
 app.use("/api/project", projectRoutes);
-// app.use("/api/employees", employeeRoutes);
+app.use("/api/task", taskRoutes);
 
 // Error handling
 // app.use(errorHandler);

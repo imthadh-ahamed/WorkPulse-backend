@@ -75,13 +75,19 @@ export const createOrganization = async (req, res) => {
 export const inviteEmployee = async (req, res) => {
   try {
     const { tenantId } = req.user;
-    const { firstName, lastName, email, role } = req.body;
+    const { email, role } = req.body;
+
+    const employee = await userService.getEmployeeByEmail(email);
+
+    if (employee) {
+      return res
+        .status(400)
+        .json({ error: "This email already exists" });
+    }
 
     const invitationToken = userService.generateInvitationToken();
     const tempEmployee = await userService.createTempEmployee({
       tenantId,
-      firstName,
-      lastName,
       email,
       role,
       invitationToken,
