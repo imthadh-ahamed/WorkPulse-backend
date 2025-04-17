@@ -8,6 +8,7 @@ import announcementRoutes from "./routes/Announcement/announcement.js";
 import calendarRoutes from "./routes/Calendar/calendar.js";
 import projectRoutes from "./routes/Project/Project.js";
 import taskRoutes from "./routes/Task/Task.js";
+import employeeRoutes from "./routes/Employee/employee.js";
 
 dotenv.config();
 
@@ -35,6 +36,7 @@ app.use("/api/announcement", announcementRoutes);
 app.use("/api/calendar", calendarRoutes);
 app.use("/api/project", projectRoutes);
 app.use("/api/task", taskRoutes);
+app.use("/api/employee", employeeRoutes);
 
 // Error handling
 // app.use(errorHandler);

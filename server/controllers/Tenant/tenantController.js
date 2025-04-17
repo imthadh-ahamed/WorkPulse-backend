@@ -1,6 +1,5 @@
 import * as tenantService from "../../services/Tenant/tenantService.js";
 import * as userService from "../../services/Employees/userService.js";
-// import * as emailService from "../../services/Employees/emailService.js";
 import sendInvitationEmail from "../../services/Employees/emailService.js";
 import mongoose from "mongoose";
 
