@@ -14,7 +14,8 @@ const employeeSchema = new mongoose.Schema({
   isAdmin: { type: Boolean, default: false, required: true },
   role: { type: String, required: true },
   bio: { type: String, default: null },
-  position: { type: String, default: null },
+  jobtitle: { type: String, default: null },
+  department: { type: String, default: null },
   address: { type: String, default: null },
   created: { type: Date, default: Date.now, required: true },
   createdBy: {
