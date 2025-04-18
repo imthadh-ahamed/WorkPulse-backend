@@ -1,7 +1,7 @@
 import Employee from "../../models/Employees/Employee.js";
 
 export const getAllEmployees = async (tenantId, page, limit, search) => {
-  const filter = { tenantId };
+  const filter = { tenantId, isDeleted: false};
   if (search) {
     filter.email = { $regex: search, $options: "i" };
   }

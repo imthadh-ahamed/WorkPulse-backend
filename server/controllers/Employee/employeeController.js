@@ -36,7 +36,7 @@ export const deleteEmployeeById = async (req, res) => {
     if (!result) {
       return res.status(404).json({ message: "Employee not found" });
     }
-    res.status(200).json({ message: "Employee deleted successfully" });
+    res.status(201).json({ message: "Employee deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
