@@ -5,26 +5,13 @@ class TaskService {
     return await Task.create(data);
   }
 
-  async getTasks(query, pagination) {
-    const { tenantId, title, status } = query;
-    const { page, limit } = pagination;
+  async getTasks(query) {
+    const { tenantId, projectId } = query;
 
-    const filter = { tenantId, isDeleted: false };
-    if (title) {
-      filter.title = { $regex: title, $options: "i" };
-    }
-    if (status) {
-      filter.status = status;
-    }
+    const filter = { tenantId, projectId, isDeleted: false };
 
-    const skip = (page - 1) * limit;
-    const total = await Task.countDocuments(filter);
-    const tasks = await Task.find(filter)
-      .skip(skip)
-      .limit(limit)
-      .sort({ created: -1 });
-
-    return { tasks, total };
+    const tasks = await Task.find(filter).sort({ created: -1 });
+    return { tasks, total: tasks.length };
   }
 
   async getTaskById(id, tenantId) {
