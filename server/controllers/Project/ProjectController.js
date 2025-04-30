@@ -1,16 +1,13 @@
-import Project from "../../models/Project/Project.js";
+import ProjectService from "../../services/Project/ProjectService.js";
 
 // Create a new project
 export const createProject = async (req, res) => {
   try {
     const { tenantId } = req.user;
     const createdBy = req.user.id;
-    const project = new Project({
-      ...req.body,
-      tenantId,
-      createdBy,
-    });
-    const savedProject = await project.save();
+    const projectData = { ...req.body, tenantId, createdBy };
+
+    const savedProject = await ProjectService.createProject(projectData);
     res.status(201).json(savedProject);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -20,7 +17,11 @@ export const createProject = async (req, res) => {
 // Get all projects
 export const getAllProjects = async (req, res) => {
   try {
-    const projects = await Project.find();
+    const { tenantId } = req.user;
+    const { page = 1, limit = 10, name } = req.query;
+    const query = { tenantId, name };
+    const pagination = { page: parseInt(page), limit: parseInt(limit) };
+    const projects = await ProjectService.getAllProjects(query, pagination);
     res.status(200).json(projects);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -30,7 +31,7 @@ export const getAllProjects = async (req, res) => {
 // Get a project by ID
 export const getProjectById = async (req, res) => {
   try {
-    const project = await Project.findById(req.params.id);
+    const project = await ProjectService.getProjectById(req.params.id);
     if (!project) return res.status(404).json({ message: "Project not found" });
     res.status(200).json(project);
   } catch (error) {
@@ -41,10 +42,9 @@ export const getProjectById = async (req, res) => {
 // Update a project
 export const updateProject = async (req, res) => {
   try {
-    const updatedProject = await Project.findByIdAndUpdate(
+    const updatedProject = await ProjectService.updateProject(
       req.params.id,
-      req.body,
-      { new: true }
+      req.body
     );
     if (!updatedProject)
       return res.status(404).json({ message: "Project not found" });
@@ -57,20 +57,11 @@ export const updateProject = async (req, res) => {
 // Delete a project
 export const deleteProject = async (req, res) => {
   try {
-    const deletedProject = await Project.findByIdAndDelete(req.params.id);
+    const deletedProject = await ProjectService.deleteProject(req.params.id);
     if (!deletedProject)
       return res.status(404).json({ message: "Project not found" });
-    res.status(200).json({ message: "Project deleted successfully" });
+    res.status(201).json({ message: "Project deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-};
-
-// Export all functions as a single object
-export default {
-  createProject,
-  getAllProjects,
-  getProjectById,
-  updateProject,
-  deleteProject,
 };
