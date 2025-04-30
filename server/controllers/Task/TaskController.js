@@ -4,21 +4,9 @@ export const createTask = async (req, res) => {
   try {
     const { tenantId } = req.user;
     const createdBy = req.user.id;
-    const { title, description, assignedTo, priority, status, deadline } =
-      req.body;
+    const taskData = { ...req.body, tenantId, createdBy };
 
-    const newTask = await TaskService.createTask({
-      tenantId,
-      title,
-      description,
-      assignedTo,
-      priority,
-      status,
-      deadline,
-      createdBy,
-      created: new Date(),
-    });
-
+    const newTask = await TaskService.createTask(taskData);
     res.status(201).json(newTask);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -28,18 +16,13 @@ export const createTask = async (req, res) => {
 export const getTasks = async (req, res) => {
   try {
     const { tenantId } = req.user;
-    const { title, status, page = 1, limit = 10 } = req.query;
+    const { projectId } = req.query;
 
-    const { tasks, total } = await TaskService.getTasks(
-      { tenantId, title, status },
-      { page: parseInt(page), limit: parseInt(limit) }
-    );
+    const { tasks } = await TaskService.getTasks({ tenantId, projectId });
 
     res.status(200).json({
       data: tasks,
-      currentPage: parseInt(page),
-      totalPages: Math.ceil(total / limit),
-      totalItems: total,
+      totalItems: tasks.length,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -87,7 +70,7 @@ export const deleteTask = async (req, res) => {
 
     await TaskService.deleteTask(id, tenantId);
 
-    res.status(200).json({ message: "Task deleted successfully" });
+    res.status(201).json({ message: "Task deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
