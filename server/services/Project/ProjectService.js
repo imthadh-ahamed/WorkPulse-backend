@@ -10,10 +10,7 @@ class ProjectService {
     const { tenantId, name } = query;
     const { page, limit } = pagination;
 
-    const filter = {};
-    if (tenantId) {
-      filter.tenantId = tenantId;
-    }
+    const filter = { tenantId, isActive: true };
     if (name) {
       filter.name = { $regex: name, $options: "i" };
     }
