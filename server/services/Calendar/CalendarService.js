@@ -5,13 +5,18 @@ class CalendarService {
     return await Event.create(eventData);
   }
 
-  async getEvents(query, page, limit) {
+  async getEvents(tenantId, search, page, limit) {
+    const filter = { tenantId };
+    if (search) {
+      filter.title = { $regex: search, $options: "i" };
+    }
+
     const skip = (parseInt(page) - 1) * parseInt(limit);
-    const total = await Event.countDocuments(query);
-    const events = await Event.find(query)
+    const events = await Event.find(filter)
       .skip(skip)
       .limit(parseInt(limit))
       .sort({ start: 1 });
+    const total = await Event.countDocuments(filter);
 
     return { events, total };
   }

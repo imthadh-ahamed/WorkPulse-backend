@@ -38,26 +38,16 @@ export const createEvent = async (req, res) => {
 export const getEvents = async (req, res) => {
   try {
     const { tenantId } = req.user;
-    const { title, page = 1, limit = 7 } = req.query;
+    const { page = 1, limit = 7, search = "" } = req.query;
 
-    const query = { tenantId };
-
-    if (title) {
-      query.title = { $regex: title, $options: "i" };
-    }
-
-    const { events, total } = await CalendarService.getEvents(
-      query,
+    const events = await CalendarService.getEvents(
+      tenantId,
       page,
-      limit
+      limit,
+      search
     );
 
-    res.status(200).json({
-      data: events,
-      currentPage: parseInt(page),
-      totalPages: Math.ceil(total / limit),
-      totalItems: total,
-    });
+    res.status(200).json(events);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

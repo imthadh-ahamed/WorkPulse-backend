@@ -79,7 +79,7 @@ export const deleteAnnouncement = async (req, res) => {
 
     await AnnouncementService.deleteAnnouncement(id, tenantId);
 
-    res.status(201).json({ message: "Announcement deleted successfully" });
+    res.status(204).json({ message: "Announcement deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
