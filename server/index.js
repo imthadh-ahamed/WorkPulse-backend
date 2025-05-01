@@ -9,6 +9,7 @@ import calendarRoutes from "./routes/Calendar/calendar.js";
 import projectRoutes from "./routes/Project/Project.js";
 import taskRoutes from "./routes/Task/Task.js";
 import employeeRoutes from "./routes/Employee/employee.js";
+import mlRoutes from "./routes/ML/mlRoutes.js";
 
 dotenv.config();
 
@@ -37,6 +38,7 @@ app.use("/api/calendar", calendarRoutes);
 app.use("/api/project", projectRoutes);
 app.use("/api/task", taskRoutes);
 app.use("/api/employee", employeeRoutes);
+app.use("/api/ml", mlRoutes);
 
 // Error handling
 // app.use(errorHandler);
