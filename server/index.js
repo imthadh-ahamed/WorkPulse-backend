@@ -1,6 +1,8 @@
 import dotenv from "dotenv";
 import express from "express";
-import cors from "cors"; // Import CORS
+import cors from "cors";
+import morgan from "morgan";
+import mongoose from "mongoose"; // For graceful shutdown
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/auth.js";
 import tenantRoutes from "./routes/Tenant/tenant.js";
@@ -11,25 +13,32 @@ import taskRoutes from "./routes/Task/Task.js";
 import employeeRoutes from "./routes/Employee/employee.js";
 import mlRoutes from "./routes/ML/mlRoutes.js";
 import focusModeRoutes from "./routes/FocusMode/focusmode.js";
+import { errorHandler } from "./middleware/errorHandler.js";
 
 dotenv.config();
 
 const app = express();
 
+// Validate environment variables
+if (!process.env.MONGO) {
+  console.error("Error: MONGO environment variable is not defined.");
+  process.exit(1);
+}
+
 // Enable CORS
-app.use(
-  cors({
-    origin: "http://localhost:3000", // Allow requests from your frontend
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"], // Allow specific HTTP methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
-  })
-);
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+app.use(cors(corsOptions));
 
 // Connect to database
 connectDB();
 
 // Middleware
 app.use(express.json());
+app.use(morgan("dev")); // Log HTTP requests
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -43,7 +52,14 @@ app.use("/api/ml", mlRoutes);
 app.use("/api/focusmode", focusModeRoutes);
 
 // Error handling
-// app.use(errorHandler);
+app.use(errorHandler); // Use error handler middleware
+
+// Graceful shutdown
+process.on("SIGINT", async () => {
+  console.log("Shutting down gracefully...");
+  await mongoose.connection.close();
+  process.exit(0);
+});
 
 const PORT = process.env.PORT || 8081;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
