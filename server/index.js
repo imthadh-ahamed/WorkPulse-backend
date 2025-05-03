@@ -12,7 +12,8 @@ import projectRoutes from "./routes/Project/Project.js";
 import taskRoutes from "./routes/Task/Task.js";
 import employeeRoutes from "./routes/Employee/employee.js";
 import mlRoutes from "./routes/ML/mlRoutes.js";
-import { errorHandler } from "./middleware/errorHandler.js"; 
+import focusModeRoutes from "./routes/FocusMode/focusmode.js";
+import { errorHandler } from "./middleware/errorHandler.js";
 
 dotenv.config();
 
@@ -48,6 +49,7 @@ app.use("/api/project", projectRoutes);
 app.use("/api/task", taskRoutes);
 app.use("/api/employee", employeeRoutes);
 app.use("/api/ml", mlRoutes);
+app.use("/api/focusmode", focusModeRoutes);
 
 // Error handling
 app.use(errorHandler); // Use error handler middleware
